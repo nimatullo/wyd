@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"fmt"
+
+	"os"
 )
 
 var CURRENT_ACTIVITY Activity = Activity{
@@ -21,7 +23,10 @@ func main() {
 	router.GET("/", helloWorld)
 	router.POST("/activity", updateCurrentActivity)
 	router.GET("/activity", getCurrentActivity)
-	router.Run(":8080")
+
+	port := os.Getenv("PORT")
+
+	router.Run(":" + port)
 }
 
 type Activity struct {
