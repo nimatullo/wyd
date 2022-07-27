@@ -1,0 +1,13 @@
+{
+  "name": "Hello, World!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["tabs"],
+  "action": {
+    "default_title": "Hello, World!",
+    "default_popup": "hello.html"
+  }
+}
