@@ -17,7 +17,7 @@ async function updateCurrentAcitivty() {
     website: tab.url,
   };
 
-  fetch("http://localhost:8080/activity", {
+  fetch("https://p-wyd.herokuapp.com/activity", {
     method: "POST",
     body: JSON.stringify(activity),
   })
