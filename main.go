@@ -21,7 +21,7 @@ func main() {
 	router.GET("/", helloWorld)
 	router.POST("/activity", updateCurrentActivity)
 	router.GET("/activity", getCurrentActivity)
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }
 
 type Activity struct {
