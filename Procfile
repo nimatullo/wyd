@@ -1,1 +1,1 @@
-web: bin/what-service
+web: bin/wyd-service
