@@ -33,4 +33,4 @@ The chrome extension sends updates to the API with what tab is currently active.
 ## ✅ Todo
 
 - [ ] only allow POST requests from the extension
-- [ ] use server sent events to update status
+- [x] use server sent events to update status
