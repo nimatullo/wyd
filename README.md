@@ -1,4 +1,7 @@
-<h1 align="center"> wyd 👀 </h1> <br>
+<div align="center">
+  <h1> wyd 👀 </h1>
+  <em>W.I.P. ⚙️</em>
+</div>
 
 <p align="center">
   <img width="250" src="https://images.metmuseum.org/CRDImages/ad/original/DT4436.jpg">
