@@ -78,17 +78,28 @@ func StreamHandler(c *gin.Context) {
 	c.Writer.Header().Set("Content-Type", "text/event-stream")
 	c.Writer.Header().Set("Cache-Control", "no-cache")
 
+	firstStream := true
+
 	c.Stream(func(w io.Writer) bool {
+		if firstStream && len(CURRENT_ACTIVITY.Name) > 0 {
+			firstStream = false
+			Send(w)
+		}
+
 		if CURRENT_ACTIVITY.Ready {
-			bytes, err := json.Marshal(CURRENT_ACTIVITY)
-			if err != nil {
-				fmt.Println(err)
-			}
-			fmt.Fprintf(w, "data: %s\n\n", string(bytes))
-			CURRENT_ACTIVITY.Ready = false
+			Send(w)
 		}
 		return true
 	})
 
 	fmt.Println("Closing connection")
+}
+
+func Send(w io.Writer) {
+	bytes, err := json.Marshal(CURRENT_ACTIVITY)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Fprintf(w, "data: %s\n\n", string(bytes))
+	CURRENT_ACTIVITY.Ready = false
 }
