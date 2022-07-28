@@ -3,9 +3,10 @@
   <em>W.I.P. ⚙️</em>
 </div>
 
-<p align="center">
-  <img width="250" src="https://images.metmuseum.org/CRDImages/ad/original/DT4436.jpg">
-</p>
+  <p align="center">
+    <img width="250" src="https://images.metmuseum.org/CRDImages/ad/original/DT4436.jpg" alt="Lover's Eyes" title="Lover's Eyes">
+  </p>
+
 
 <p align="center">
   <strong>A real time website logger. </strong>
