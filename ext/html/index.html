@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    html {
+      background-color: #fefefe;
+    }
+    body {
+      display: grid;
+      place-items: center;
+      padding: 1em;
+      width: 300px;
+      background-color: #efefef;
+      border: 1px solid #6f6f6f1c;
+      border-radius: 6px;
+    }
+    button {
+      border: 1px solid #1c1c1c;
+      border-radius: 6px;
+      margin: 1em;
+      padding: 10px;
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1c1c1c;
+      color: #fefefe;
+    }
+
+    p#status {
+      padding: 1em;
+      font-size: larger;
+    }
+
+    p#status.success {
+      background-color: hsla(120, 53%, 51%, 0.42);
+      color: #32692b;
+    }
+
+    p#status.error {
+      background-color: hsla(0, 53%, 51%, 0.42);
+      color: #9f1c1c;
+    }
+
+    button#hoarder-button::after {
+      content: "";
+      display: block;
+      width: 1.2em;
+      height: 1.2em;
+      position: absolute;
+      left: calc(50% - 0.75em);
+      top: calc(50% - 0.75em);
+      border: 0.15em solid transparent;
+      border-right-color: white;
+      border-radius: 50%;
+      animation: button-anim 0.7s linear infinite;
+      opacity: 0;
+    }
+
+    button#hoarder-button.loading {
+      color: transparent;
+    }
+
+    button#hoarder-button.loading::after {
+      opacity: 1;
+    }
+
+    @keyframes button-anim {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <body>
+    <h1>Nimatullo Utils</h1>
+
+    <button id="hoarder-button">Add To Hoarder</button>
+
+    <p id="status"></p>
+
+    <script src="../scripts/script.js"></script>
+  </body>
+</html>
