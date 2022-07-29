@@ -3,6 +3,7 @@ async function onButtonClick() {
 
   const tab = await getCurrentTab();
 
+  // Get master password from storage and then tell background script to make a request to nimatullo.com
   chrome.storage.sync.get("password", function (data) {
     chrome.runtime.sendMessage(
       { type: "add-link", url: tab.url, password: data.password },

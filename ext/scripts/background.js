@@ -1,57 +1,10 @@
+// Chrome API Functions
+
 chrome.runtime.onInstalled.addListener(async () => {
   await askForMasterPassword();
 });
 
 chrome.tabs.onActivated.addListener(updateCurrentAcitivty);
-
-async function askForMasterPassword() {
-  let url = chrome.runtime.getURL("../html/hello.html");
-
-  await chrome.tabs.create({ url });
-}
-
-async function updateCurrentAcitivty() {
-  let tab = await getCurrentTab();
-
-  if (isTabBlacklisted(tab)) return;
-
-  const activity = {
-    name: tab.title,
-    website: tab.url,
-  };
-
-  fetch("https://p-wyd.herokuapp.com/activity", {
-    method: "POST",
-    body: JSON.stringify(activity),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      chrome.storage.sync.set({ lastUpdate: tab.url });
-    })
-    .catch((error) => console.log(error));
-}
-
-function isTabBlacklisted(tab) {
-  const blacklistedWebsites = [
-    "chrome://",
-    "chrome-extension://",
-    "chrome-devtools://",
-    "about:blank",
-    "about:newtab",
-    "https://nimatullo.com",
-  ];
-
-  return blacklistedWebsites.some((website) => tab.url.includes(website));
-}
-
-async function getCurrentTab() {
-  let queryOptions = { active: true };
-
-  let [tab] = await chrome.tabs.query(queryOptions);
-  console.log(tab);
-
-  return tab;
-}
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
   if (msg.type === "add-link") {
@@ -77,3 +30,49 @@ chrome.runtime.onMessage.addListener((msg, sender, response) => {
 
   return true;
 });
+
+// Helper Functions
+async function askForMasterPassword() {
+  let url = chrome.runtime.getURL("../html/onboarding.html");
+
+  await chrome.tabs.create({ url });
+}
+
+async function updateCurrentAcitivty() {
+  const tab = await getCurrentTab();
+
+  if (isTabBlacklisted(tab)) return;
+
+  const activity = {
+    name: tab.title,
+    website: tab.url,
+  };
+
+  fetch("https://p-wyd.herokuapp.com/activity", {
+    method: "POST",
+    body: JSON.stringify(activity),
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
+}
+
+async function getCurrentTab() {
+  let queryOptions = { active: true };
+
+  let [tab] = await chrome.tabs.query(queryOptions);
+  return tab;
+}
+
+function isTabBlacklisted(tab) {
+  const blacklistedWebsites = [
+    "chrome://",
+    "chrome-extension://",
+    "chrome-devtools://",
+    "about:blank",
+    "about:newtab",
+    "https://nimatullo.com",
+  ];
+
+  return blacklistedWebsites.some((website) => tab.url.includes(website));
+}

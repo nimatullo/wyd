@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Onboarding...</title>
+  </head>
+  <style>
+   html {
+      background-color: #fefefe;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+    }
+    body {
+      display: grid;
+      place-items: center;
+      padding: 1em;
+      background-color: #efefef;
+      border: 1px solid #6f6f6f1c;
+      border-radius: 6px;
+    }
+    button {
+      color: #efefef;
+      background-color: #1c1c1c;
+      border-radius: 6px;
+      margin: 1em;
+      padding: 10px;
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      color: #1c1c1c;
+      background-color: #efefef;
+      border: 1px solid #1c1c1c;
+      cursor: pointer;
+    }
+
+    p.info {
+      max-width: 992px;
+    }
+
+    code {
+      background-color: #fefefe;
+      border-radius: 2px;
+    }
+
+    input {
+      border: 1px solid #1e1e1e;
+      margin: 0.5em 0;
+      padding: 0.5em;
+      width: 200px;
+      border-radius: 6px;
+    }
+  </style>
+  <body>
+    <h1>Nimatullo Utils</h1>
+
+    <p class="info">When making API calls to <code>nimatullo.com</code>, a master password needs to be given. This is to prevent anyone from adding URLs to the website. In the future this might be fazed out once I figure out how to add firewalls/cors policy in Netlify.</p>
+
+    <input type="password" id="password" placeholder="Master Password" />
+    <button id="password-button">Submit</button>
+
+    <script src="../scripts/onboarding.js"></script>
+  </body>
+</html>
