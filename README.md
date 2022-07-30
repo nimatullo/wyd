@@ -1,12 +1,11 @@
 <div align="center">
   <h1> wyd 👀 </h1>
-  <em>W.I.P. ⚙️</em>
+  <em>⚠️W.I.P.⚠️</em>
 </div>
 
   <p align="center">
     <img width="250" src="https://images.metmuseum.org/CRDImages/ad/original/DT4436.jpg" alt="Lover's Eyes" title="Lover's Eyes">
   </p>
-
 
 <p align="center">
   <strong>A real time website logger. </strong>
@@ -28,7 +27,7 @@
 
 ## 🔧 How Does It Work
 
-The chrome extension sends updates to the API with what tab is currently active. The API is consumed through [nimatullo.com](https://nimatullo.com)
+The chrome extension sends updates to the API with what website I'm currently on. The API is consumed through [nimatullo.com](https://nimatullo.com) where it receives these updates through [server sent events](https://en.wikipedia.org/wiki/Server-sent_events).
 
 ## ✅ Todo
 
