@@ -12,6 +12,19 @@ async function onButtonClick() {
   });
 }
 
+function onSwitchChange(e) {
+  const loggingLabel = document.getElementById("logging-label");
+  chrome.storage.sync.get("logging", function (data) {
+    if (e.target.checked) {
+      loggingLabel.innerText = "Logging ON";
+      chrome.storage.sync.set({ logging: true });
+    } else {
+      loggingLabel.innerText = "Logging OFF";
+      chrome.storage.sync.set({ logging: false });
+    }
+  });
+}
+
 function showLoader() {
   const hoarderButton = document.getElementById("hoarder-button");
 
@@ -50,6 +63,21 @@ async function getCurrentTab() {
   return tab;
 }
 
+function restoreOptions() {
+  chrome.storage.sync.get("logging", function (data) {
+    document.getElementById("switch-checkbox").checked = data.logging;
+    document.getElementById("logging-label").innerText = `Logging ${
+      data.logging ? "ON" : "OFF"
+    }`;
+  });
+}
+
 document
   .getElementById("hoarder-button")
   .addEventListener("click", onButtonClick);
+
+document
+  .getElementById("switch-checkbox")
+  .addEventListener("change", onSwitchChange);
+
+document.addEventListener("DOMContentLoaded", restoreOptions);
