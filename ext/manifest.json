@@ -6,7 +6,7 @@
     "service_worker": "scripts/background.js"
   },
   "host_permissions": ["https://nimatullo.com/*"],
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "webNavigation"],
   "action": {
     "default_title": "Nimatullo Utils",
     "default_popup": "html/index.html",

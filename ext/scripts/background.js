@@ -4,6 +4,8 @@ chrome.runtime.onInstalled.addListener(async () => {
   await askForMasterPassword();
 });
 
+chrome.webNavigation.onCompleted.addListener(updateCurrentAcitivty);
+
 chrome.tabs.onActivated.addListener(updateCurrentAcitivty);
 
 chrome.runtime.onMessage.addListener((msg, sender, response) => {
