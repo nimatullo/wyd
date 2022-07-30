@@ -2,6 +2,7 @@
 
 chrome.runtime.onInstalled.addListener(async () => {
   await askForMasterPassword();
+  chrome.storage.sync.set({ logging: true });
 });
 
 chrome.webNavigation.onCompleted.addListener(updateCurrentAcitivty);
@@ -41,22 +42,28 @@ async function askForMasterPassword() {
 }
 
 async function updateCurrentAcitivty() {
-  const tab = await getCurrentTab();
+  await chrome.storage.sync.get("logging", async function (data) {
+    if (!data.logging) {
+      return;
+    } else {
+      const tab = await getCurrentTab();
 
-  if (isTabBlacklisted(tab)) return;
+      if (isTabBlacklisted(tab)) return;
 
-  const activity = {
-    name: tab.title,
-    website: tab.url,
-  };
+      const activity = {
+        name: tab.title,
+        website: tab.url,
+      };
 
-  fetch("https://p-wyd.herokuapp.com/activity", {
-    method: "POST",
-    body: JSON.stringify(activity),
-  })
-    .then((response) => response.json())
-    .then((data) => console.log(data))
-    .catch((error) => console.log(error));
+      fetch("https://p-wyd.herokuapp.com/activity", {
+        method: "POST",
+        body: JSON.stringify(activity),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.log(error));
+    }
+  });
 }
 
 async function getCurrentTab() {
