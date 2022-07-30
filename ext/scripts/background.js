@@ -44,7 +44,6 @@ async function askForMasterPassword() {
 async function updateCurrentAcitivty() {
   await chrome.storage.sync.get("logging", async function (data) {
     if (!data.logging) {
-      console.log("Logging is disabled", data);
       return;
     } else {
       const tab = await getCurrentTab();
