@@ -67,7 +67,9 @@ func GetCurrentActivity(c *gin.Context) {
 func StreamHandler(c *gin.Context) {
 	c.Writer.Header().Set("Content-Type", "text/event-stream")
 	c.Writer.Header().Set("Cache-Control", "no-cache")
-
+	
+	// When a connection is first made to the event-stream, we need to publish the last known activity.
+	// this boolean lets the stream function to know whether or not the initial activity should be published.
 	firstStream := true
 
 	c.Stream(func(w io.Writer) bool {
