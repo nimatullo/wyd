@@ -24,7 +24,7 @@ func InitDatabase() {
 		connStr = "postgres://puffer:puffer@localhost:5432/wyd"
 	}
 
-	connStr += "?sslmode=disable"
+	// connStr += "?sslmode=disable"
 
 	log.Println(DB)
 
