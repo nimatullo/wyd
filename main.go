@@ -7,19 +7,18 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"wyd/activity"
+	"wyd/database"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
-var CURRENT_ACTIVITY Activity = Activity{
-	Name:    "",
-	Website: "",
-	Since:   "",
-	Ready:   false,
-}
-
 func main() {
+	database.InitDatabase()
+	activity.CURRENT_ACTIVITY = database.GetCurrentActivityFromDb()
+	fmt.Println("Current activity:", activity.CURRENT_ACTIVITY)
+
 	router := gin.Default()
 	router.Use(cors.Default())
 
@@ -39,13 +38,6 @@ func main() {
 	}
 }
 
-type Activity struct {
-	Name    string `json:"name"`
-	Website string `json:"website"`
-	Since   string `json:"since"`
-	Ready   bool   `json:"ready"`
-}
-
 func HelloWorld(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"message": "Hello World!",
@@ -53,25 +45,23 @@ func HelloWorld(c *gin.Context) {
 }
 
 func UpdateCurrentActivity(c *gin.Context) {
-	var activity Activity
-	activity.Since = time.Now().Format("2006-01-02 15:04:05")
+	updateJson := activity.Activity{}
 
-	c.BindJSON(&activity)
-	CURRENT_ACTIVITY = activity
-	CURRENT_ACTIVITY.Ready = true
+	c.BindJSON(&updateJson)
+	updateJson.Since = time.Now().Format("2006-01-02 15:04:05")
 
-	c.IndentedJSON(http.StatusOK, gin.H{
-		"message": "Activity updated",
-		"current": CURRENT_ACTIVITY,
-	})
+	if database.UpdateCurrentActivityInDb(updateJson) {
+		updateJson.Ready = true
+		activity.CURRENT_ACTIVITY = updateJson
+	}
 
-	fmt.Println(CURRENT_ACTIVITY)
+	c.IndentedJSON(http.StatusOK, activity.CURRENT_ACTIVITY)
 }
 
 func GetCurrentActivity(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, gin.H{
-		"current": CURRENT_ACTIVITY,
-	})
+	currentActivity := database.GetCurrentActivityFromDb()
+
+	c.IndentedJSON(http.StatusOK, currentActivity)
 }
 
 func StreamHandler(c *gin.Context) {
@@ -81,12 +71,12 @@ func StreamHandler(c *gin.Context) {
 	firstStream := true
 
 	c.Stream(func(w io.Writer) bool {
-		if firstStream && len(CURRENT_ACTIVITY.Name) > 0 {
+		if firstStream && len(activity.CURRENT_ACTIVITY.Name) > 0 {
 			firstStream = false
 			Send(w)
 		}
 
-		if CURRENT_ACTIVITY.Ready {
+		if activity.CURRENT_ACTIVITY.Ready {
 			Send(w)
 		}
 		return true
@@ -96,10 +86,10 @@ func StreamHandler(c *gin.Context) {
 }
 
 func Send(w io.Writer) {
-	bytes, err := json.Marshal(CURRENT_ACTIVITY)
+	bytes, err := json.Marshal(activity.CURRENT_ACTIVITY)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Fprintf(w, "data: %s\n\n", string(bytes))
-	CURRENT_ACTIVITY.Ready = false
+	activity.CURRENT_ACTIVITY.Ready = false
 }
