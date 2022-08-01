@@ -21,10 +21,8 @@ func InitDatabase() {
 
 	if connStr == "" {
 		log.Println("No database connection string found. Using default.")
-		connStr = "postgres://puffer:puffer@localhost:5432/wyd"
+		connStr = "postgres://puffer:puffer@localhost:5432/wyd?sslmode=disable"
 	}
-
-	// connStr += "?sslmode=disable"
 
 	log.Println(DB)
 
@@ -33,31 +31,28 @@ func InitDatabase() {
 	CreateTable()
 }
 
-func CreateSQLiteFile() {
-	log.Println("Creating wyd.db...")
-	file, err := os.Create("wyd.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	file.Close()
-	log.Println("wyd.db created.")
-}
-
 func CreateTable() {
 	log.Println("Creating table...")
 	_, err := DB.Exec("CREATE TABLE IF NOT EXISTS activity (name TEXT, website TEXT, since TEXT, ready BOOLEAN)")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	CheckIfInitalDataPresent()
 }
 
-func FileExists(filename string) bool {
-	info, err := os.Stat(filename)
+func CheckIfInitalDataPresent() {
+	currentActivity := activity.Activity{}
+	err := DB.QueryRow("SELECT * FROM activity").Scan(&currentActivity.Name, &currentActivity.Website, &currentActivity.Since, &currentActivity.Ready)
+	if err != nil {
+		log.Println("No inital data found. Inserting default data.")
 
-	if os.IsNotExist(err) {
-		return false
+		_, err := DB.Exec("INSERT INTO activity (name, website, since, ready) VALUES ($1, $2, $3, $4)", "the unknown", "https://nimatullo.com", "08-20-1999", true)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
-	return !info.IsDir()
 }
 
 func UpdateCurrentActivityInDb(activityUpdate activity.Activity) bool {
