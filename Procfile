@@ -1,1 +1,1 @@
-web: bin/wyd-service
+web: bin/wyd

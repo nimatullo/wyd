@@ -1,13 +1,15 @@
 {
-  "name": "Hello, World!",
+  "name": "Nimatullo Utils",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "scripts/background.js"
   },
-  "permissions": ["tabs"],
+  "host_permissions": ["https://nimatullo.com/*"],
+  "permissions": ["tabs", "storage", "webNavigation"],
   "action": {
-    "default_title": "Hello, World!",
-    "default_popup": "hello.html"
+    "default_title": "Nimatullo Utils",
+    "default_popup": "html/index.html",
+    "default_icon": "img/eyes.png"
   }
 }
