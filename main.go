@@ -20,7 +20,7 @@ func main() {
 	fmt.Println("Current activity:", activity.CURRENT_ACTIVITY)
 
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(cors.Default()) // TODO: Add correct CORS setting
 
 	router.GET("/", HelloWorld)
 	router.POST("/activity", UpdateCurrentActivity)
