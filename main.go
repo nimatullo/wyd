@@ -53,9 +53,12 @@ func UpdateCurrentActivity(c *gin.Context) {
 	if database.UpdateCurrentActivityInDb(updateJson) {
 		updateJson.Ready = true
 		activity.CURRENT_ACTIVITY = updateJson
+		c.IndentedJSON(http.StatusOK, activity.CURRENT_ACTIVITY)
+	} else {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{
+			"message": "Could not update activity"
+		})
 	}
-
-	c.IndentedJSON(http.StatusOK, activity.CURRENT_ACTIVITY)
 }
 
 func GetCurrentActivity(c *gin.Context) {
