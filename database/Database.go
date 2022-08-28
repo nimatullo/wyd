@@ -3,11 +3,9 @@ package database
 import (
 	"database/sql"
 
-	"os"
-
 	"log"
 
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 
 	"wyd/activity"
 )
@@ -17,16 +15,16 @@ var (
 )
 
 func InitDatabase() {
-	connStr := os.Getenv("DATABASE_URL")
 
-	if connStr == "" {
-		log.Println("No database connection string found. Using default.")
-		connStr = "postgres://puffer:puffer@localhost:5432/wyd?sslmode=disable"
+	connStr := "./wyd.db"
+
+	db, err := sql.Open("sqlite3", connStr)
+
+	if err != nil {
+		log.Fatal(err)
+		return
 	}
-
-	log.Println(DB)
-
-	DB, _ = sql.Open("postgres", connStr)
+	DB = db
 
 	CreateTable()
 }
@@ -36,12 +34,13 @@ func CreateTable() {
 	_, err := DB.Exec("CREATE TABLE IF NOT EXISTS activity (name TEXT, website TEXT, since TEXT, ready BOOLEAN)")
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 
-	CheckIfInitalDataPresent()
+	InsertInitialDataIfNotPresent()
 }
 
-func CheckIfInitalDataPresent() {
+func InsertInitialDataIfNotPresent() {
 	currentActivity := activity.Activity{}
 	err := DB.QueryRow("SELECT * FROM activity").Scan(&currentActivity.Name, &currentActivity.Website, &currentActivity.Since, &currentActivity.Ready)
 	if err != nil {
@@ -52,6 +51,8 @@ func CheckIfInitalDataPresent() {
 		if err != nil {
 			log.Fatal(err)
 		}
+	} else {
+		log.Println("Found initial data.")
 	}
 }
 
