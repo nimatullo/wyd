@@ -1,5 +1,6 @@
 {
   "name": "Nimatullo Utils",
+  "description": "Some utility functions for communicating with nimatullo.com.",
   "version": "1.0",
   "manifest_version": 3,
   "background": {
@@ -9,7 +10,11 @@
   "permissions": ["tabs", "storage", "webNavigation"],
   "action": {
     "default_title": "Nimatullo Utils",
-    "default_popup": "html/index.html",
-    "default_icon": "img/eyes.png"
+    "default_popup": "html/index.html"
+  },
+  "icons": {
+    "16": "img/icons16.png",
+    "48": "img/icons48.png",
+    "128": "img/icons128.png"
   }
 }
