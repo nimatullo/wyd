@@ -10,6 +10,7 @@ import (
 	"wyd/activity"
 )
 
+// Global database connection
 var (
 	DB *sql.DB
 )
@@ -26,10 +27,10 @@ func InitDatabase() {
 	}
 	DB = db
 
-	CreateTable()
+	CreateTableIfNotExists()
 }
 
-func CreateTable() {
+func CreateTableIfNotExists() {
 	log.Println("Creating table...")
 	_, err := DB.Exec("CREATE TABLE IF NOT EXISTS activity (name TEXT, website TEXT, since TEXT, ready BOOLEAN)")
 	if err != nil {
@@ -40,6 +41,10 @@ func CreateTable() {
 	InsertInitialDataIfNotPresent()
 }
 
+/*
+When the app first starts, like...literally the first time ever, there is no data in the database. This function ensures that
+there is always some default value to read when the stream endpoint is accessed.
+*/
 func InsertInitialDataIfNotPresent() {
 	currentActivity := activity.Activity{}
 	err := DB.QueryRow("SELECT * FROM activity").Scan(&currentActivity.Name, &currentActivity.Website, &currentActivity.Since, &currentActivity.Ready)
@@ -56,7 +61,7 @@ func InsertInitialDataIfNotPresent() {
 	}
 }
 
-func UpdateCurrentActivityInDb(activityUpdate activity.Activity) bool {
+func UpdateCurrentActivityInDb(activityUpdate activity.Activity) bool { // Returns a boolean to let the caller know if the update was successful.
 	stmt, err := DB.Prepare("UPDATE activity SET name=$1, website=$2, since=$3, ready=$4 WHERE name=$5")
 	if err != nil {
 		log.Fatal(err)

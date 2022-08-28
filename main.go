@@ -20,7 +20,7 @@ func main() {
 	fmt.Println("Current activity:", activity.CURRENT_ACTIVITY)
 
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(cors.Default()) // TODO: Add correct CORS setting
 
 	router.GET("/", HelloWorld)
 	router.POST("/activity", UpdateCurrentActivity)
@@ -53,9 +53,12 @@ func UpdateCurrentActivity(c *gin.Context) {
 	if database.UpdateCurrentActivityInDb(updateJson) {
 		updateJson.Ready = true
 		activity.CURRENT_ACTIVITY = updateJson
+		c.IndentedJSON(http.StatusOK, activity.CURRENT_ACTIVITY)
+	} else {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{
+			"message": "Could not update activity",
+		})
 	}
-
-	c.IndentedJSON(http.StatusOK, activity.CURRENT_ACTIVITY)
 }
 
 func GetCurrentActivity(c *gin.Context) {
@@ -68,6 +71,8 @@ func StreamHandler(c *gin.Context) {
 	c.Writer.Header().Set("Content-Type", "text/event-stream")
 	c.Writer.Header().Set("Cache-Control", "no-cache")
 
+	// When a connection is first made to the event-stream, we need to publish the last known activity.
+	// this boolean lets the stream function to know whether or not the initial activity should be published.
 	firstStream := true
 
 	c.Stream(func(w io.Writer) bool {

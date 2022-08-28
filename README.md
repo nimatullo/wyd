@@ -33,5 +33,5 @@ The chrome extension sends updates to the API with what website I'm currently on
 
 - [ ] only allow POST requests from the extension
 - [x] use server sent events to update status
-- [ ] connect database to persist last accessed website
+- [x] connect database to persist last accessed website
 - [x] add toggle for website logging
