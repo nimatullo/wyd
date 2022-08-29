@@ -14,6 +14,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type GithubData struct {
+	Sha     string `json:"sha"`
+	Message string `json:"message"`
+}
+
+type Reponse struct {
+	datas []GithubData
+}
+
 func main() {
 	database.InitDatabase()
 	activity.CURRENT_ACTIVITY = database.GetCurrentActivityFromDb()
@@ -22,7 +31,7 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.Default()) // TODO: Add correct CORS setting
 
-	router.GET("/", HelloWorld)
+	router.GET("/", IndexPage)
 	router.POST("/activity", UpdateCurrentActivity)
 	router.GET("/activity", GetCurrentActivity)
 	router.GET("/stream", StreamHandler)
@@ -38,9 +47,28 @@ func main() {
 	}
 }
 
-func HelloWorld(c *gin.Context) {
+func IndexPage(c *gin.Context) {
+
+	response, err := http.Get("https://api.github.com/repos/nimatullo/wyd/commits")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer response.Body.Close()
+
+	decoder := json.NewDecoder(response.Body)
+
+	var data Reponse
+	err = decoder.Decode(&data.datas)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"message": "Hello World!",
+		"title":       "wyd service",
+		"description": "wyd request processing server",
+		"code":        "https://github.com/nimatullo/wyd",
+		"version":     data.datas[0].Sha,
 	})
 }
 

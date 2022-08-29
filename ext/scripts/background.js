@@ -2,7 +2,7 @@
 
 chrome.runtime.onInstalled.addListener(async () => {
   await askForMasterPassword();
-  chrome.storage.sync.set({ logging: true });
+  chrome.storage.sync.set({ logging: false }); // default to false
 });
 
 chrome.webNavigation.onCompleted.addListener(updateCurrentAcitivty);

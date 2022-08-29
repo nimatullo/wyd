@@ -7,7 +7,7 @@ async function onButtonClick() {
   chrome.storage.sync.get("password", function (data) {
     chrome.runtime.sendMessage(
       { type: "add-link", url: tab.url, password: data.password },
-      (response) => setStatusMessage(response)
+      (response) => setStatusMessage(response.message)
     );
   });
 }
