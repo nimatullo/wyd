@@ -5,9 +5,11 @@ import (
 
 	"log"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 
 	"wyd/activity"
+
+	"os"
 )
 
 // Global database connection
@@ -17,9 +19,15 @@ var (
 
 func InitDatabase() {
 
-	connStr := "./wyd.db"
+	connStr := os.Getenv("DATABASE_URL")
 
-	db, err := sql.Open("sqlite3", connStr)
+	if len(connStr) == 0 {
+		log.Fatal("DATABASE_URL environment variable not set.")
+	} else {
+		log.Println("Connecting to database at", connStr)
+	}
+
+	db, err := sql.Open("postgres", connStr)
 
 	if err != nil {
 		log.Fatal(err)
